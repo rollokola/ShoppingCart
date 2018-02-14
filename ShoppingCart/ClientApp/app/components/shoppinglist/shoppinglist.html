@@ -1,0 +1,55 @@
+<template>
+    <require from="aurelia-kendoui-bridge/grid/grid"></require>
+    <require from="aurelia-kendoui-bridge/grid/col"></require>
+    <require from="aurelia-kendoui-bridge/buttongroup/buttongroup"></require>
+    <require from="aurelia-kendoui-bridge/button/button"></require>
+    <require from="aurelia-kendoui-bridge/window/window"></require>
+    
+    <h1>Products</h1>
+
+  
+
+    <p if.bind="!products" ><em>Loading...</em></p>
+
+ 
+    <div>
+        <div >
+            <label>Namn</label>
+            <input type="text" style="width: 100%;" class="k-input" value.bind="selItem.name"></input>
+        </div>
+        <div style="margin-top: 10px" >
+            <label>Price</label>
+            <input type="text" style="width: 100%;" class="k-input" value.bind="selItem.price"></input>
+        </div>
+        <div style="margin-top: 10px" >
+            <label>Barcode</label>
+            <input type="text" style="width: 100%;" class="k-input" value.bind="selItem.barcode"></input>
+        </divstyle="margin-top:>
+
+        <div style="margin-top: 10px" >
+            <input show.bind="selItem.name != ''" type="button" ak-button class="k-primary" click.delegate="saveItem()" value="Store" />
+            <input  show.bind="selItem.id != 0" type="button" ak-button class="k-primary" click.delegate="clearItem()" value="Clear" />
+            <input show.bind="selItem.id != 0" type="button" ak-button class="k-primary" click.delegate="removeItem()" value="Remove" />
+        </div>
+
+        <div if.bind="!isLoading" style="margin-top: 10px">
+            <ak-grid k-data-source.bind="datasource"
+                     k-selectable.bind="true"
+                     k-pageable.bind="true"
+                     k-on-change.delegate="rowSelected($event.detail)">
+                <ak-col k-title="Namn" k-field="name"></ak-col>
+                <ak-col k-title="Pris" k-field="price"></ak-col>
+                <ak-col k-title="Barcode" k-field="barcode"></ak-col>
+            </ak-grid>
+        </div>
+    </div>
+
+  
+
+        <hr />
+
+     
+
+        <hr />
+
+</template>

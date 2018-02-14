@@ -1,0 +1,43 @@
+<template>
+    <require from="aurelia-kendoui-bridge/grid/grid"></require>
+    <require from="aurelia-kendoui-bridge/grid/col"></require>
+    <require from="aurelia-kendoui-bridge/buttongroup/buttongroup"></require>
+    <require from="aurelia-kendoui-bridge/button/button"></require>
+    <require from="aurelia-kendoui-bridge/window/window"></require>
+
+    <h1>Shoppingcart</h1>
+
+
+
+    <p if.bind="!products"><em>Loading...</em></p>
+
+
+    <div>
+     
+
+     
+        <div style="margin-top: 10px">
+        
+
+            <div if.bind="!isLoading" style="margin-top: 10px">
+                <ak-grid k-data-source.bind="notInCartProducts"
+                         k-selectable.bind="true"
+                         k-pageable.bind="true"
+                         k-on-change.delegate="rowSelected($event.detail)">
+                    <ak-col k-title="Namn" k-field="name"></ak-col>
+                    <ak-col k-title="Pris" k-field="price"></ak-col>
+                    <ak-col k-title="Barcode" k-field="barcode"></ak-col>
+                </ak-grid>
+            </div>
+        </div>
+
+
+
+        <hr />
+
+
+
+        <hr />
+
+
+</template>

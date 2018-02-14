@@ -1,0 +1,117 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+	<TargetFramework>net461</TargetFramework>
+	<RuntimeIdentifier>win7-x86</RuntimeIdentifier>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NET461</DefineConstants>
+    <OutputPath>bin\Debug\net461\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\app\components\shoppingcart\**" />
+    <Compile Remove="ClientApp\app\components\shoppinglist\**" />
+    <Compile Remove="ShoppingCart_\**" />
+    <Content Remove="ClientApp\app\components\shoppingcart\**" />
+    <Content Remove="ClientApp\app\components\shoppinglist\**" />
+    <Content Remove="ShoppingCart_\**" />
+    <EmbeddedResource Remove="ClientApp\app\components\shoppingcart\**" />
+    <EmbeddedResource Remove="ClientApp\app\components\shoppinglist\**" />
+    <EmbeddedResource Remove="ShoppingCart_\**" />
+    <None Remove="ClientApp\app\components\shoppingcart\**" />
+    <None Remove="ClientApp\app\components\shoppinglist\**" />
+    <None Remove="ShoppingCart_\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\contracts\Product.cs" />
+    <Compile Remove="Controllers\ShoppingListController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\app\components\service\if.js" />
+    <None Remove="ClientApp\app\components\service\if.js.map" />
+    <None Remove="ClientApp\app\components\service\if.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShoppingCart.BLL\ShoppingCart.BLL.csproj" />
+    <ProjectReference Include="..\ShoppingCart.Contract\ShoppingCart.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\contracts\Product.ts">
+      <CustomToolNamespace>..\ShoppingCart.Contract\Generated\Product.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\contracts\ProductGroup.ts">
+      <CustomToolNamespace>..\ShoppingCart.Contract\Generated\ProductGroup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\contracts\ShoppingList.ts">
+      <CustomToolNamespace>..\ShoppingCart.Contract\Generated\ShoppingList.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\contracts\ShoppingListItem.ts">
+      <CustomToolNamespace>..\ShoppingCart.Contract\Generated\ShoppingListItem.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\contracts\Users.ts">
+      <CustomToolNamespace>..\ShoppingCart.Contract\Generated\Users.cs</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+
+  <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+
+    <!-- In development, the dist files won't exist on the first run or when cloning to
+         a different machine, so rebuild them if not already present. -->
+    <Message Importance="high" Text="Performing first-run Webpack build..." />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec Command="npm install" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod" />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="wwwroot\dist\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>
